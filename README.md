@@ -11,7 +11,7 @@ Trading platform with WebSocket support.
 
 ## Overview
 
-Brief overview of the project, its purpose, and key features.
+The server is asynchronous, and WebSocket functionality has been implemented. After receiving orders from the client, the server responds with the orderId, orderStatus, stocks, and quantity. The order can have three statuses: PENDING, EXECUTED, and CANCELLED. Initially, the status is set to PENDING, and after a delay of 1-5 seconds, it is changed to EXECUTED. If the client sends a DELETE request, the status is changed to CANCELLED. The application uses a non-relational in-memory database with three initial orders for testing purposes.
 
 ## Endpoints
 
@@ -61,13 +61,14 @@ Brief overview of the project, its purpose, and key features.
 
 ## WebSocket
 
-WebSocket functionality in the project. How it is used, the supported events/messages, and any other relevant details.
+Once an order is requested, a message will be sent via WebSocket with the ID and status "PENDING." After a delay of 1-5 seconds, the status will change to "EXECUTED." Once the status changes, a new message will be sent via WebSocket with the ID and status.
 
 ## Usage
 
 Steps required to install and set up the project locally. Include any dependencies and prerequisites that need to be installed.
 
 run locally:
+  - Download the latest python
   - `pip install -r requirements.txt`
   - `uvicorn main:app --reload`
 
