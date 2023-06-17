@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Form with WebSocket</title>
+</head>
+<body>
+    <h1>Order Form with WebSocket</h1>
+    <label for="stocksInput">Stocks:</label>
+    <input type="text" id="stocksInput" />
+    <br>
+    <br>
+    <label for="quantityInput">Quantity:</label>
+    <input type="number" id="quantityInput" />
+    <br>
+    <br>
+    <button id="sendOrderButton">Send Order</button>
+    <div id="messageDisplay"></div>
+
+    <script>
+        function sendOrderRequest() {
+            const stocksInput = document.getElementById("stocksInput");
+            const quantityInput = document.getElementById("quantityInput");
+
+            const requestData = {
+                stocks: stocksInput.value,
+                quantity: parseInt(quantityInput.value),
+            };
+
+          fetch("/orders", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log("Order created successfully:", data);
+              // Do any necessary UI updates or display success message
+            })
+            .catch(error => {
+              console.error("Error creating order:", error);
+              // Display error message or handle error case
+            });
+        }
+
+        document.getElementById("sendOrderButton").addEventListener("click", function() {
+            sendOrderRequest();
+        });
+
+        let socket;
+
+        function connectWebSocket() {
+            socket = new WebSocket("ws://localhost:8000/ws");
+
+            socket.onopen = function(event) {
+                console.log("WebSocket connected");
+            };
+
+            socket.onmessage = function(event) {
+                console.log("WebSocket message received:", event.data);
+                displayMessage(event.data); // Display the received message
+            };
+
+            socket.onclose = function(event) {
+                console.log("WebSocket connection closed");
+            };
+        }
+
+        function sendMessage(message) {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(message);
+            }  else {
+                console.log("WebSocket connection is not open. Message not sent.");
+            }
+        }
+
+        function displayMessage(message) {
+            const messageDisplay = document.getElementById("messageDisplay");
+            const messageElement = document.createElement("p");
+            messageElement.textContent = message;
+            messageDisplay.appendChild(messageElement);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            connectWebSocket();
+        });
+
+        window.addEventListener("beforeunload", function() {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.close();
+            }
+        });
+    </script>
+</body>
+</html>
