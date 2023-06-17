@@ -15,6 +15,15 @@ The server is asynchronous, and WebSocket functionality has been implemented. Af
 
 ## Endpoints
 
+To view the Swagger documentation, please follow these steps:
+
+1. Visit `https://editor-next.swagger.io/`
+2. On the Swagger Editor page, click on the "File" menu at the top
+3. From the dropdown menu, select "Import File"
+4. Locate and select the YAML file that contains the Swagger documentation
+5. Wait for the import process to complete
+6. Once the YAML file is imported, you will be able to view and interact with the Swagger documentation on the Swagger Editor platform
+
 #### Home Page
 
 - **Endpoint**: `GET /`
@@ -68,7 +77,7 @@ Once an order is requested, a message will be sent via WebSocket with the ID and
 Steps required to install and set up the project locally. Include any dependencies and prerequisites that need to be installed.
 
 run locally:
-  - Download the latest python
+  - Download the latest python `https://www.python.org/downloads/`
   - `pip install -r requirements.txt`
   - `uvicorn main:app --reload`
 
